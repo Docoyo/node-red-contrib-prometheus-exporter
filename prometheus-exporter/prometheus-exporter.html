@@ -1,0 +1,104 @@
+<script type="text/html" data-template-name="prometheus-exporter">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="(optional)" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-metric"><i class="fa fa-line-chart"></i> Metric</label>
+    <input type="text" id="node-input-metric" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="prometheus-exporter">
+  <p>This node exposes <code>msg.payload</code> as Prometheus metric.</p>
+  <h2>Configure a metric</h2>
+  <p>In the editor of the metric node, create a new metric by clicking the pencil button next to the "Metric" drop down
+    box. The config node editor will fire up.
+    In the config node editor, define the metric as you like. Name, help, and metric type are mandatory. Label names are
+    optional. To learn more about Prometheus metrics, please refer to the <a
+      href="https://prometheus.io/docs/concepts/metric_types/">Prometheus documentation</a>.
+  </p>
+  <h2>Using the metric in a flow</h2>
+  <p>After you have defined the metric, you can now feed the metric with values to actually populate the metrics output.
+    The node expects a <code>message.payload</code> as input with the following structure:
+  </p>
+  <pre>
+{
+  "op": "inc",
+  "val": 5,
+  "labels": {
+      "tag_1": "computer_123"
+  }
+}
+</pre>
+  <p>Choose the <code>op</code> property from one of the following values:
+    <ul>
+      <li>For metrics of type <strong>Counter</strong>:
+        <ul>
+          <li><code>inc</code> - Increases the counter by <code>val</code> (without specifying <code>val</code>,
+            defaults to <code>1</code>)</li>
+        </ul>
+      </li>
+      <li>For metrics of type <strong>Gauge</strong>:
+        <ul>
+          <li><code>set</code> - Sets the gauge to <code>val</code> (which is mandatory for this operation)</li>
+          <li><code>inc</code> - Increases the gauge by <code>val</code> (without specifying <code>val</code>, defaults
+            to <code>1</code>)</li>
+          <li><code>dec</code> - Decreases the gauge by <code>val</code> (without specifying <code>val</code>, defaults
+            to <code>1</code>)</li>
+        </ul>
+      </li>
+    </ul>
+  </p>
+  <h2>Check the metrics output</h2>
+  <p>
+    Deploy the flow, open up the browser and access the <code>/metrics</code> endpoint of the NodeRED server.
+
+    The output should look like this:
+    <pre>
+# HELP example_counter This is an example Counter
+# TYPE example_counter counter
+example_counter 10
+
+# HELP example_gauge This is an example Gauge
+# TYPE example_gauge gauge
+example_gauge{tag_1="computer_123"} 5
+example_gauge 5
+</pre>
+  </p>
+</script>
+
+<script type="text/javascript">
+  function label() {
+    var nodeid = this.metric;
+    var metricNode = RED.nodes.node(nodeid);
+    return this.name || (metricNode && 'metric [' + metricNode.name) + ']' || '(metric)';
+  }
+
+  function validateMetricNode() {
+    return RED.nodes.node(this.metric) != null;
+  }
+
+  RED.nodes.registerType('prometheus-exporter', {
+    category: 'network',
+    defaults: {
+      name: {
+        value: ''
+      },
+      metric: {
+        type: 'prometheus-metric-config',
+        validate: validateMetricNode
+      }
+    },
+    align: 'right',
+    color: '#F3B567',
+    inputs: 1,
+    outputs: 0,
+    icon: 'font-awesome/fa-line-chart',
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+    label: label,
+    paletteLabel: 'prometheus out'
+  });
+</script>
