@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 module.exports = function (RED) {
   'use strict';
   const exporter = require('./prometheus-adapter');
