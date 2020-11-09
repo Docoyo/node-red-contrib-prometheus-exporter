@@ -26,11 +26,11 @@ npm install node-red-contrib-prometheus-exporter
 
 ### Configure a metric
 
-From the Palette Manager, pull the node "Prometheus metric" in the __network__ section into your flow.
+From the Palette Manager, pull the node "prometheus out" in the __network__ section into your flow.
 
 In the editor of the metric node, create a new metric by clicking the pencil button next to the "Metric" drop down box. The config node editor will fire up.
 
-In the config node editor, define the metric as you like. Name, Help, and metric type are mandatory. Label names are optional. To learn more about Prometheus metrics, please refer to the [Prometheus documentation](https://prometheus.io/docs/concepts/metric_types/).
+In the config node editor, define the metric as you like. Name, help, and metric type are mandatory. Label names are optional. To learn more about Prometheus metrics, please refer to the [Prometheus documentation](https://prometheus.io/docs/concepts/metric_types/).
 
 ### Using the metric in a flow
 
