@@ -1,0 +1,80 @@
+<!-- Prometheus metric configuration node -->
+<script type="text/html" data-template-name="prometheus-metric-config">
+  <div class="form-row">
+    <label for="node-config-name"><i class="fa fa-line-chart"></i> Metric Name</label>
+    <input type="text" id="node-config-input-name" placeholder="(mandatory)" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-help"><i class="fa fa-question-circle"></i> Metric Help</label>
+    <input id="node-config-input-help" type="text" placeholder="(mandatory)" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-labels"><i class="fa fa-tag"></i> Labels</label>
+    <input id="node-config-input-labels" type="text" placeholder="label1, label2, label3 (optional)" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-mtype"><i class="fa fa-wrench"></i> Metric Type</label>
+    <select id="node-config-input-mtype">
+      <option value="counter">Counter</option>
+      <option value="gauge">Gauge</option>
+    </select>
+  </div>
+</script>
+
+<script type="text/javascript">
+  function onConfigEditPrepare() {
+    $('#node-config-input-mtype').change(function (event) {
+      console.log('mtype chanhged:', $( this ).val());
+    });
+  }
+
+  function onConfigEditSave() {
+    // TODO: We will add handling for other metric types here
+  }
+
+  function validateMetricLabels(value) {
+    console.log('validateMetricLabels', value);
+    if (value) {
+      let splitLabels = value.split(',');
+      splitLabels = splitLabels.map((item) => item.trim());
+      return splitLabels.every((item) => item.match(/[a-zA-Z_:][a-zA-Z0-9_:]*/));
+    } else {
+      return true;
+    }
+  }
+
+  RED.nodes.registerType('prometheus-metric-config', {
+    category: 'config',
+    defaults: {
+      name: {
+        value: '',
+        required: true
+      },
+      help: {
+        value: '',
+        required: true
+      },
+      labels: {
+        value: [],
+        validate: validateMetricLabels
+      },
+      mtype: {
+        value: 'counter',
+        required: true
+      }
+    },
+    inputs: 0,
+    outputs: 0,
+    label: function () {
+      return this.name || '(unconfigured)';
+    },
+    oneditsave: onConfigEditSave,
+    oneditprepare: onConfigEditPrepare
+  });
+</script>
+
+<style>
+  .red-ui-editor .form-row label {
+    width: 120px;
+  }
+</style>

@@ -1,0 +1,50 @@
+<script type="text/html" data-template-name="prometheus-exporter">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="(optional)" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-metric"><i class="fa fa-line-chart"></i> Metric</label>
+    <input type="text" id="node-input-metric" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="prometheus-exporter">
+  <p>This node exposes msg.payload as Prometheus metric.</p>
+</script>
+
+<script type="text/javascript">
+
+  function label() {
+    var nodeid = this.metric;
+    var metricNode = RED.nodes.node(nodeid);
+    return this.name || (metricNode && 'metric [' + metricNode.name) + ']' || '(metric)';
+  }
+
+  function validateMetricNode() {
+    return RED.nodes.node(this.metric) != null;
+  }
+
+  RED.nodes.registerType('prometheus-exporter', {
+    category: 'network',
+    defaults: {
+      name: {
+        value: ''
+      },
+      metric: {
+        type: 'prometheus-metric-config',
+        validate: validateMetricNode
+      }
+    },
+    align: 'right',
+    color: '#F3B567',
+    inputs: 1,
+    outputs: 0,
+    icon: 'font-awesome/fa-line-chart',
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+    label: label,
+    paletteLabel: 'prometheus out'
+  });
+</script>
