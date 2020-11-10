@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 const VALID_OPS = {
   counter: ['inc'],
   gauge: ['inc', 'dec', 'set']
