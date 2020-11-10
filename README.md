@@ -20,8 +20,6 @@ Alternatively, you can also manually install the node permanently into your embe
 npm install node-red-contrib-prometheus-exporter
 ```
 
-*Note: Until we have officially released the library, it needs to be installed via downloading this repository into your project.*
-
 ## How to use
 
 ### Configure a metric
