@@ -65,6 +65,8 @@ Labels are always optional. Make sure, you only use label keys, which you have d
 
 Deploy the flow, open up the browser and access the `/metrics` endpoint of your NodeRED server.
 
+The output should look like this:
+
 ```
 # HELP example_counter This is an example Counter
 # TYPE example_counter counter
