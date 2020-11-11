@@ -36,12 +36,16 @@ module.exports = function (RED) {
             metricOp = DEFAULT_OPS[this.metricConfig.mtype];
           }
           // apply specific value
-          if (Number.isInteger(msg.payload.val)) {
-            metricVal = msg.payload.val;
-          } else {
+          if (msg.payload.val === undefined || msg.payload.val === null) {
             // no value is only allowed for counter
             if (this.metricConfig.mtype !== 'counter') {
               done('Missing val for metric type ' + this.metricConfig.mtype);
+            }
+          } else {
+            if (isNaN(Number(msg.payload.val))) {
+              done('Invalid val for metric type ' + this.metricConfig.mtype);
+            } else {
+              metricVal = Number(msg.payload.val);
             }
           }
           // apply labels
