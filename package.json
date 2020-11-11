@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-prometheus-exporter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A NodeRED node which allows exporting Prometheus metrics from within flows.",
   "keywords": ["node-red", "prometheus", "telegraf"],
   "main": "index.js",
