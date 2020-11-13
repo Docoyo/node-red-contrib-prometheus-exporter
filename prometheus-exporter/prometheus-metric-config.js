@@ -15,7 +15,7 @@ module.exports = function (RED) {
     node.mtype = config.mtype;
 
     if (RED.settings.httpNodeRoot !== false) {
-      exporter.register(RED);
+      exporter.init(RED);
       node.prometheusMetric = registerMetric(node);
     }
 

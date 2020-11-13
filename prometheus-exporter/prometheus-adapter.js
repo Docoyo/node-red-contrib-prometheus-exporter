@@ -1,22 +1,24 @@
-const PromClient = require('prom-client');
-const registry = PromClient.Registry;
+const client = require('prom-client');
+const Registry = client.Registry;
 const DEFAULT_PROMETHEUS_METRICS_PATH = '/metrics';
 
 let isInitialized = false;
+let customRegistry = new Registry();
 
 function initialize(RED) {
   RED.log.info('Initializing Prometheus exporter');
   if (process.env.PROMETHEUS_COLLECT_DEFAULT_METRICS) {
     // default metrics
-    const collectDefaultMetrics = PromClient.collectDefaultMetrics;
-    collectDefaultMetrics({
-      timeout: 5000
-    });
+    try {
+      client.collectDefaultMetrics({register: customRegistry});
+    } catch (error) {
+      RED.log.error(error);
+    }
   }
   // add request handler
   let callback = function (req, res) {
-    res.set('Content-Type', PromClient.register.contentType);
-    res.end(PromClient.register.metrics());
+    res.set('Content-Type', customRegistry.contentType);
+    res.end(customRegistry.metrics());
   };
   let path = process.env.PROMETHEUS_METRICS_PATH || DEFAULT_PROMETHEUS_METRICS_PATH;
   RED.httpNode.get(path, callback);
@@ -25,24 +27,29 @@ function initialize(RED) {
 }
 
 module.exports = {
-  register: function (RED) {
+  init: function (RED) {
     if (!isInitialized) {
       initialize(RED);
       isInitialized = true;
     }
   },
   addCounter: function (metricConfig) {
-    const counter = new PromClient.Counter(metricConfig);
+    const metric = new client.Counter(metricConfig);
+    customRegistry.registerMetric(metric);
     red.log.info('Added Prometheus Counter ' + metricConfig.name + ' ' + JSON.stringify(metricConfig, null, 2));
-    return counter;
+    return metric;
   },
   addGauge: function (metricConfig) {
-    const counter = new PromClient.Gauge(metricConfig);
+    const metric = new client.Gauge(metricConfig);
+    customRegistry.registerMetric(metric);
     red.log.info('Added Prometheus Gauge ' + metricConfig.name+ ' ' + JSON.stringify(metricConfig, null, 2));
-    return counter;
+    return metric;
   },
   removeMetric: function (metricName) {
-    registry.globalRegistry.removeSingleMetric(metricName);
+    customRegistry.removeSingleMetric(metricName);
     red.log.info('Removed Prometheus metric ' + metricName);
+  },
+  getRegistry: function() {
+    return customRegistry;
   }
 };
