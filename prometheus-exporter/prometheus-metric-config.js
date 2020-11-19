@@ -7,7 +7,7 @@ module.exports = function (RED) {
   function PrometheusMetricConfigNode(config) {
     RED.nodes.createNode(this, config);
     let node = this;
-    RED.log.debug('Instanciating PrometheusMetricConfigNode', node.id);
+    RED.log.info('Instanciating PrometheusMetricConfigNode ' + config.name);
 
     node.name = config.name;
     node.help = config.help;
@@ -20,6 +20,7 @@ module.exports = function (RED) {
     }
 
     this.on('close', function () {
+      RED.log.info('Closing PrometheusMetricConfigNode ' + config.name);
       try {
         exporter.removeMetric(node.name);
       } catch (error) {
@@ -29,6 +30,7 @@ module.exports = function (RED) {
   }
 
   function registerMetric(node) {
+    RED.log.info('PrometheusMetricConfigNode.registerMetric ' + node.name);
     let labelsList = undefined;
     if (node.labels) {
       let splitLabels = node.labels.split(',');
