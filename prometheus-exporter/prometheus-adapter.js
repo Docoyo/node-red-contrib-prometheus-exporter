@@ -34,14 +34,14 @@ module.exports = {
     }
   },
   addCounter: function (metricConfig) {
+    metricConfig.registers = [customRegistry];
     const metric = new client.Counter(metricConfig);
-    customRegistry.registerMetric(metric);
     red.log.info('Added Prometheus Counter ' + metricConfig.name + ' ' + JSON.stringify(metricConfig, null, 2));
     return metric;
   },
   addGauge: function (metricConfig) {
+    metricConfig.registers = [customRegistry];
     const metric = new client.Gauge(metricConfig);
-    customRegistry.registerMetric(metric);
     red.log.info('Added Prometheus Gauge ' + metricConfig.name+ ' ' + JSON.stringify(metricConfig, null, 2));
     return metric;
   },
