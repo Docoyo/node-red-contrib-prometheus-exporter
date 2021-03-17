@@ -17,9 +17,9 @@ function initialize(RED) {
     }
   }
   // add request handler
-  let callback = function (req, res) {
+  let callback = async function (req, res) {
     res.set('Content-Type', customRegistry.contentType);
-    res.end(customRegistry.metrics());
+    res.end(await customRegistry.metrics());
   };
   let path = process.env.PROMETHEUS_METRICS_PATH || DEFAULT_PROMETHEUS_METRICS_PATH;
   RED.httpNode.get(path, callback);
