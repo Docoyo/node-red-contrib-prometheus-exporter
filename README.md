@@ -93,3 +93,5 @@ This library is licensed under Apache 2.0.
 [NodeRED](https://nodered.org) is an awsome and carefully-written low-code environment for node.js. This library has been written and tested against NodeRED v1.2.
 
 Under the hood, this library is built on top of the [prom-client](https://github.com/siimon/prom-client), a mature Prometheus client for node.js.
+
+This project is sponsored by [docoyo](https://www.docoyo.com).
