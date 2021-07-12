@@ -31,7 +31,7 @@ module.exports = function (RED) {
 
   function registerMetric(node) {
     RED.log.info('PrometheusMetricConfigNode.registerMetric ' + node.name);
-    let labelsList = undefined;
+    let labelsList = [];
     if (node.labels) {
       let splitLabels = node.labels.split(',');
       labelsList = splitLabels.map((item) => item.trim());
