@@ -30,8 +30,8 @@ function initialize(RED) {
 module.exports = {
   init: function (RED) {
     if (!isInitialized) {
-      initialize(RED);
       isInitialized = true;
+      initialize(RED);
     }
   },
   addCounter: function (metricConfig) {
@@ -43,7 +43,7 @@ module.exports = {
       return metric;
     } else {
       const metric = new client.Counter(metricConfig);
-      red.log.info('Added Prometheus Counter ' + metricConfig.name + ' ' + JSON.stringify(metricConfig, null, 2));
+      red.log.info('Added Prometheus Counter ' + metricConfig.name);
       return metric;
     }
   },
