@@ -30,6 +30,6 @@
     }
   },
   "dependencies": {
-    "prom-client": "^13.1.0"
+    "prom-client": "^14.0.0"
   }
 }
