@@ -1,8 +1,6 @@
 module.exports = function (RED) {
   'use strict';
   const exporter = require('./prometheus-adapter');
-  const PromClient = require('prom-client');
-  const Registry = PromClient.Registry;
 
   function PrometheusMetricConfigNode(config) {
     RED.nodes.createNode(this, config);

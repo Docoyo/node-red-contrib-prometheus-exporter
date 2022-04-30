@@ -17,11 +17,10 @@ module.exports = function (RED) {
 
   function PrometheusExporterNode(config) {
     RED.nodes.createNode(this, config);
-    var node = this;
     RED.log.info('Instanciating PrometheusExporterNode ' + this.id);
     this.metricConfig = RED.nodes.getNode(config.metric);
     if (this.metricConfig && this.metricConfig.mtype) {
-      this.on('input', function (msg, send, done) {
+      this.on('input', function (msg, _send, done) {
         let metricLabels = {};
         let metricVal = 1;
         let metricOp = undefined;
