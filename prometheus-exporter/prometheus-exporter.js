@@ -1,11 +1,15 @@
 const VALID_OPS = {
   counter: ['inc'],
-  gauge: ['inc', 'dec', 'set']
+  gauge: ['inc', 'dec', 'set'],
+  histogram: ['observe'],
+  summary: ['observe'],
 };
 
 const DEFAULT_OPS = {
   counter: 'inc',
-  gauge: 'set'
+  gauge: 'set',
+  histogram: 'observe',
+  summary: 'observe'
 };
 
 module.exports = function (RED) {

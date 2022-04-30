@@ -7,8 +7,10 @@ Supported metric types:
 
 * Counter
 * Gauge
+* Histogram
+* Summary
 
-Labels are supported for both metric types.
+Labels are supported for all metric types.
 
 ## How to install
 
@@ -54,6 +56,8 @@ Choose the `op` property from one of the following values:
   * `set` - Sets the gauge to `val` (which is mandatory for this operation)
   * `inc` - Increases the gauge by `val` (without specifying `val`, defaults to `1`)
   * `dec` - Decreases the gauge by `val` (without specifying `val`, defaults to `1`)
+* For metrics of type __Histogram__ and __Summary__:
+  * `observe` - Observe `val` (which is mandatory for this operation)
 
 As described above, the `val` property is mandatory or optional depending on the selected `op` and the metric type.
 
@@ -74,6 +78,35 @@ example_counter 10
 # TYPE example_gauge gauge
 example_gauge{tag_1="computer_123"} 5
 example_gauge 5
+
+# HELP example_histogram This is an example Histogram
+# TYPE example_histogram histogram
+example_histogram_bucket{le="0.005"} 0
+example_histogram_bucket{le="0.01"} 0
+example_histogram_bucket{le="0.025"} 0
+example_histogram_bucket{le="0.05"} 0
+example_histogram_bucket{le="0.1"} 0
+example_histogram_bucket{le="0.25"} 0
+example_histogram_bucket{le="0.5"} 0
+example_histogram_bucket{le="1"} 1
+example_histogram_bucket{le="2.5"} 1
+example_histogram_bucket{le="5"} 1
+example_histogram_bucket{le="10"} 1
+example_histogram_bucket{le="+Inf"} 1
+example_histogram_sum 1
+example_histogram_count 1
+
+# HELP example_summary This is an example Summary
+# TYPE example_summary summary
+example_summary{quantile="0.01"} 0.1
+example_summary{quantile="0.05"} 0.1
+example_summary{quantile="0.5"} 0.1
+example_summary{quantile="0.9"} 0.1
+example_summary{quantile="0.95"} 0.1
+example_summary{quantile="0.99"} 0.1
+example_summary{quantile="0.999"} 0.1
+example_summary_sum 0.1
+example_summary_count 1
 ```
 
 ### Changing the path
