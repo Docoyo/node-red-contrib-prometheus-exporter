@@ -50,10 +50,12 @@ Choose the `op` property from one of the following values:
 
 * For metrics of type __Counter__:
   * `inc` - Increases the counter by `val` (without specifying `val`, defaults to `1`)
+  * `remove` - Remove the stored value
 * For metrics of type __Gauge__:
   * `set` - Sets the gauge to `val` (which is mandatory for this operation)
   * `inc` - Increases the gauge by `val` (without specifying `val`, defaults to `1`)
   * `dec` - Decreases the gauge by `val` (without specifying `val`, defaults to `1`)
+  * `remove` - Remove the stored value
 
 As described above, the `val` property is mandatory or optional depending on the selected `op` and the metric type.
 

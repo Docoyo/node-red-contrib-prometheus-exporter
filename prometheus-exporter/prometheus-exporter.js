@@ -1,6 +1,6 @@
 const VALID_OPS = {
-  counter: ['inc'],
-  gauge: ['inc', 'dec', 'set']
+  counter: ['inc', 'remove'],
+  gauge: ['inc', 'dec', 'set', 'remove']
 };
 
 const DEFAULT_OPS = {
@@ -37,8 +37,8 @@ module.exports = function (RED) {
           }
           // apply specific value
           if (msg.payload.val === undefined || msg.payload.val === null) {
-            // no value is only allowed for counter
-            if (this.metricConfig.mtype !== 'counter') {
+            // no value is only allowed for counter or remove op
+            if (this.metricConfig.mtype !== 'counter' && metricOp !== 'remove') {
               done('Missing val for metric type ' + this.metricConfig.mtype);
             }
           } else {
