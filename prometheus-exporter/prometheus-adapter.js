@@ -39,7 +39,6 @@ module.exports = {
     if (customRegistry._metrics[metricConfig.name]) {
       const metric = customRegistry._metrics[metricConfig.name];
       red.log.info('Reusing Prometheus Counter ' + metricConfig.name);
-      metric.reset();
       return metric;
     } else {
       const metric = new client.Counter(metricConfig);
