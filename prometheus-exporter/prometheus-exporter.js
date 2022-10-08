@@ -1,11 +1,15 @@
 const VALID_OPS = {
   counter: ['inc'],
-  gauge: ['inc', 'dec', 'set']
+  gauge: ['inc', 'dec', 'set'],
+  histogram: ['observe'],
+  summary: ['observe'],
 };
 
 const DEFAULT_OPS = {
   counter: 'inc',
-  gauge: 'set'
+  gauge: 'set',
+  histogram: 'observe',
+  summary: 'observe'
 };
 
 module.exports = function (RED) {
@@ -13,17 +17,28 @@ module.exports = function (RED) {
 
   function PrometheusExporterNode(config) {
     RED.nodes.createNode(this, config);
-    var node = this;
     RED.log.info('Instanciating PrometheusExporterNode ' + this.id);
     this.metricConfig = RED.nodes.getNode(config.metric);
     if (this.metricConfig && this.metricConfig.mtype) {
-      this.on('input', function (msg, send, done) {
+      this.on('input', function (msg, _send, done) {
         let metricLabels = {};
         let metricVal = 1;
         let metricOp = undefined;
+
         if (msg.payload) {
+
+          if (msg.payload.reset === true) { // Including the type-check seems sensible
+            this.metricConfig.prometheusMetric.reset();
+          }
+
           // determine operation
           if (msg.payload.op) {
+            if (msg.payload.op === 'nop') {
+              // no operation
+              done();
+              return;
+            }
+
             if (VALID_OPS[this.metricConfig.mtype].includes(msg.payload.op)) {
               metricOp = msg.payload.op;
             } else {

@@ -39,7 +39,6 @@ module.exports = {
     if (customRegistry._metrics[metricConfig.name]) {
       const metric = customRegistry._metrics[metricConfig.name];
       red.log.info('Reusing Prometheus Counter ' + metricConfig.name);
-      metric.reset();
       return metric;
     } else {
       const metric = new client.Counter(metricConfig);
@@ -57,6 +56,32 @@ module.exports = {
     } else {
       const metric = new client.Gauge(metricConfig);
       red.log.info('Added Prometheus Gauge ' + metricConfig.name);
+      return metric;
+    }
+  },
+  addHistogram: function (metricConfig) {
+    metricConfig.registers = [customRegistry];
+    if (customRegistry._metrics[metricConfig.name]) {
+      const metric = customRegistry._metrics[metricConfig.name];
+      red.log.info('Reusing Prometheus Histogram ' + metricConfig.name);
+      metric.reset();
+      return metric;
+    } else {
+      const metric = new client.Histogram(metricConfig);
+      red.log.info('Added Prometheus Histogram ' + metricConfig.name);
+      return metric;
+    }
+  },
+  addSummary: function (metricConfig) {
+    metricConfig.registers = [customRegistry];
+    if (customRegistry._metrics[metricConfig.name]) {
+      const metric = customRegistry._metrics[metricConfig.name];
+      red.log.info('Reusing Prometheus Summary ' + metricConfig.name);
+      metric.reset();
+      return metric;
+    } else {
+      const metric = new client.Summary(metricConfig);
+      red.log.info('Added Prometheus Summary ' + metricConfig.name);
       return metric;
     }
   },

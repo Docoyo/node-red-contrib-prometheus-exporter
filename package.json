@@ -13,11 +13,9 @@
     "url": "git+https://github.com/Docoyo/node-red-contrib-prometheus-exporter.git"
   },
   "author": "docoyo",
-  "contributors": [
-    {
-      "name": "Masanori Fujita"
-    }
-  ],
+  "contributors": [{
+    "name": "Masanori Fujita"
+  }],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Docoyo/node-red-contrib-prometheus-exporter/issues"
@@ -30,6 +28,6 @@
     }
   },
   "dependencies": {
-    "prom-client": "^13.1.0"
+    "prom-client": "^14.1.0"
   }
 }

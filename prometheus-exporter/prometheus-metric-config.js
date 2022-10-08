@@ -1,8 +1,6 @@
 module.exports = function (RED) {
   'use strict';
   const exporter = require('./prometheus-adapter');
-  const PromClient = require('prom-client');
-  const Registry = PromClient.Registry;
 
   function PrometheusMetricConfigNode(config) {
     RED.nodes.createNode(this, config);
@@ -13,6 +11,11 @@ module.exports = function (RED) {
     node.help = config.help;
     node.labels = config.labels;
     node.mtype = config.mtype;
+    node.buckets = config.buckets;
+    node.percentiles = config.percentiles;
+    node.maxAgeSeconds = config.maxAgeSeconds;
+    node.ageBuckets = config.ageBuckets;
+    node.compressCount = config.compressCount;
 
     if (RED.settings.httpNodeRoot !== false) {
       exporter.init(RED);
@@ -36,21 +39,40 @@ module.exports = function (RED) {
       let splitLabels = node.labels.split(',');
       labelsList = splitLabels.map((item) => item.trim());
     }
-    if (node.mtype === 'counter') {
-      let metricConfig = {
-        name: node.name,
-        help: node.help,
-        labelNames: labelsList
-      };
-      return exporter.addCounter(metricConfig);
-    }
-    if (node.mtype === 'gauge') {
-      let metricConfig = {
-        name: node.name,
-        help: node.help,
-        labelNames: labelsList
-      };
-      return exporter.addGauge(metricConfig);
+    let metricConfig = {
+      name: node.name,
+      help: node.help,
+      labelNames: labelsList
+    };
+    switch (node.mtype) {
+      case 'counter':
+        return exporter.addCounter(metricConfig);
+      case 'gauge':
+        return exporter.addGauge(metricConfig);
+      case 'histogram':
+        if (node.buckets) {
+          let splitBuckets = node.buckets.split(',');
+          metricConfig.buckets = splitBuckets.map((item) => Number(item.trim()));
+        }
+        return exporter.addHistogram(metricConfig);
+      case 'summary':
+        if (node.percentiles) {
+          let splitPercentiles = node.percentiles.split(',');
+          metricConfig.percentiles = splitPercentiles.map((item) => Number(item.trim()));
+        }
+        if (node.maxAgeSeconds) {
+          metricConfig.maxAgeSeconds = Number(node.maxAgeSeconds);
+        }
+        if (node.ageBuckets) {
+          metricConfig.ageBuckets = Number(node.ageBuckets);
+        }
+        if (node.compressCount) {
+          metricConfig.compressCount = Number(node.compressCount);
+        }
+        return exporter.addSummary(metricConfig);
+      default:
+        RED.log.error('Invalid metric type ' + node.mtype);
+        return;
     }
   }
 

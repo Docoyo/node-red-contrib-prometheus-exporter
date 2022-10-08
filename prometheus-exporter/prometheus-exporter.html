@@ -24,6 +24,7 @@
   </p>
   <pre>
 {
+  "reset": false,
   "op": "inc",
   "val": 5,
   "labels": {
@@ -31,6 +32,7 @@
   }
 }
 </pre>
+  <p>Set <code>reset</code> if you want to reset the metric before the operation is executed. Defaults to <code>false</code>.</p>
   <p>Choose the <code>op</code> property from one of the following values:
     <ul>
       <li>For metrics of type <strong>Counter</strong>:
@@ -48,6 +50,12 @@
             to <code>1</code>)</li>
         </ul>
       </li>
+      <li>For metrics of type <strong>Histogram</strong> and <strong>Summary</strong>:
+        <ul>
+          <li><code>observe</code> - Observe <code>val</code> (which is mandatory for this operation)</li>
+        </ul>
+      </li>
+      <li>Additionally, all metrics support the <code>nop</code> 'no-operation' mode, which does nothing. Useful for resets.</li>
     </ul>
   </p>
   <h2>Check the metrics output</h2>
@@ -64,6 +72,35 @@ example_counter 10
 # TYPE example_gauge gauge
 example_gauge{tag_1="computer_123"} 5
 example_gauge 5
+
+# HELP example_histogram This is an example Histogram
+# TYPE example_histogram histogram
+example_histogram_bucket{le="0.005"} 0
+example_histogram_bucket{le="0.01"} 0
+example_histogram_bucket{le="0.025"} 0
+example_histogram_bucket{le="0.05"} 0
+example_histogram_bucket{le="0.1"} 0
+example_histogram_bucket{le="0.25"} 0
+example_histogram_bucket{le="0.5"} 0
+example_histogram_bucket{le="1"} 1
+example_histogram_bucket{le="2.5"} 1
+example_histogram_bucket{le="5"} 1
+example_histogram_bucket{le="10"} 1
+example_histogram_bucket{le="+Inf"} 1
+example_histogram_sum 1
+example_histogram_count 1
+
+# HELP example_summary This is an example Summary
+# TYPE example_summary summary
+example_summary{quantile="0.01"} 0.1
+example_summary{quantile="0.05"} 0.1
+example_summary{quantile="0.5"} 0.1
+example_summary{quantile="0.9"} 0.1
+example_summary{quantile="0.95"} 0.1
+example_summary{quantile="0.99"} 0.1
+example_summary{quantile="0.999"} 0.1
+example_summary_sum 0.1
+example_summary_count 1
 </pre>
   </p>
 </script>

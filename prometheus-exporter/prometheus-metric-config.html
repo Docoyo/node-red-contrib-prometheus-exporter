@@ -17,14 +17,51 @@
     <select id="node-config-input-mtype">
       <option value="counter">Counter</option>
       <option value="gauge">Gauge</option>
+      <option value="histogram">Histogram</option>
+      <option value="summary">Summary</option>
     </select>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-buckets"><i class="fa fa-wrench"></i> Buckets</label>
+    <input id="node-config-input-buckets" disabled type="text" placeholder="0.005, 0.01, 0.05, 0.25, 0.5, 1, 5, 10 (optional)" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-percentiles"><i class="fa fa-wrench"></i> Percentiles</label>
+    <input id="node-config-input-percentiles" disabled type="text" placeholder="0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999 (optional)" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-maxAgeSeconds"><i class="fa fa-wrench"></i> Max bucket age in seconds</label>
+    <input id="node-config-input-maxAgeSeconds" disabled type="text" placeholder="(optional)" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-ageBuckets"><i class="fa fa-wrench"></i> Number of buckets in sliding window</label>
+    <input id="node-config-input-ageBuckets" disabled type="text" placeholder="(optional)" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-compressCount"><i class="fa fa-wrench"></i> Number of measurements after which data is compressed</label>
+    <input id="node-config-input-compressCount" disabled type="text" placeholder="1000 (optional)" />
   </div>
 </script>
 
 <script type="text/javascript">
   function onConfigEditPrepare() {
     $('#node-config-input-mtype').change(function (event) {
-      console.log('mtype chanhged:', $( this ).val());
+      if ($(this).val() === 'histogram') {
+        $('#node-config-input-buckets').removeAttr('disabled');
+      } else {
+        $('#node-config-input-buckets').attr('disabled', 'disabled');
+      }
+      if ($(this).val() === 'summary') {
+        $('#node-config-input-percentiles').removeAttr('disabled');
+        $('#node-config-input-maxAgeSeconds').removeAttr('disabled');
+        $('#node-config-input-ageBuckets').removeAttr('disabled');
+        $('#node-config-input-compressCount').removeAttr('disabled');
+      } else {
+        $('#node-config-input-percentiles').attr('disabled', 'disabled');
+        $('#node-config-input-maxAgeSeconds').attr('disabled', 'disabled');
+        $('#node-config-input-ageBuckets').attr('disabled', 'disabled');
+        $('#node-config-input-compressCount').attr('disabled', 'disabled');
+      }
     });
   }
 
@@ -33,11 +70,28 @@
   }
 
   function validateMetricLabels(value) {
-    console.log('validateMetricLabels', value);
     if (value) {
       let splitLabels = value.split(',');
       splitLabels = splitLabels.map((item) => item.trim());
       return splitLabels.every((item) => item.match(/[a-zA-Z_:][a-zA-Z0-9_:]*/));
+    } else {
+      return true;
+    }
+  }
+
+  function validateMetricNumber(value) {
+    if (value) {
+      return !isNaN(Number(value));
+    } else {
+      return true;
+    }
+  }
+
+  function validateMetricNumberList(value) {
+    if (value) {
+      let splitBuckets = value.split(',');
+      splitBuckets = splitBuckets.map((item) => Number(item.trim()));
+      return splitBuckets.every((item) => !isNaN(item));
     } else {
       return true;
     }
@@ -61,6 +115,26 @@
       mtype: {
         value: 'counter',
         required: true
+      },
+      buckets: {
+        value: [],
+        validate: validateMetricNumberList
+      },
+      percentiles: {
+        value: [],
+        validate: validateMetricNumberList
+      },
+      maxAgeSeconds: {
+        value: null,
+        validate: validateMetricNumber
+      },
+      ageBuckets: {
+        value: null,
+        validate: validateMetricNumber
+      },
+      compressCount: {
+        value: null,
+        validate: validateMetricNumber
       }
     },
     inputs: 0,
