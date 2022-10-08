@@ -24,9 +24,21 @@ module.exports = function (RED) {
         let metricLabels = {};
         let metricVal = 1;
         let metricOp = undefined;
+
         if (msg.payload) {
+
+          if (msg.payload.reset === true) { // Including the type-check seems sensible
+            this.metricConfig.prometheusMetric.reset();
+          }
+
           // determine operation
           if (msg.payload.op) {
+            if (msg.payload.op === 'nop') {
+              // no operation
+              done();
+              return;
+            }
+
             if (VALID_OPS[this.metricConfig.mtype].includes(msg.payload.op)) {
               metricOp = msg.payload.op;
             } else {

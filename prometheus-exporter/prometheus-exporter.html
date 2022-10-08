@@ -24,6 +24,7 @@
   </p>
   <pre>
 {
+  "reset": false,
   "op": "inc",
   "val": 5,
   "labels": {
@@ -31,6 +32,7 @@
   }
 }
 </pre>
+  <p>Set <code>reset</code> if you want to reset the metric before the operation is executed. Defaults to <code>false</code>.</p>
   <p>Choose the <code>op</code> property from one of the following values:
     <ul>
       <li>For metrics of type <strong>Counter</strong>:
@@ -53,6 +55,7 @@
           <li><code>observe</code> - Observe <code>val</code> (which is mandatory for this operation)</li>
         </ul>
       </li>
+      <li>Additionally, all metrics support the <code>nop</code> 'no-operation' mode, which does nothing. Useful for resets.</li>
     </ul>
   </p>
   <h2>Check the metrics output</h2>

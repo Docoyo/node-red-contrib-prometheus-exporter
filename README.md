@@ -40,6 +40,7 @@ The node expects a `message.payload` as input with the following structure:
 
 ```json
 {
+    "reset": false,
     "op": "inc",
     "val": 5,
     "labels": {
@@ -47,6 +48,8 @@ The node expects a `message.payload` as input with the following structure:
     }
 }
 ```
+
+Set `reset` if you want to reset the metric before the operation is executed. Defaults to `false`.
 
 Choose the `op` property from one of the following values:
 
@@ -58,6 +61,7 @@ Choose the `op` property from one of the following values:
   * `dec` - Decreases the gauge by `val` (without specifying `val`, defaults to `1`)
 * For metrics of type __Histogram__ and __Summary__:
   * `observe` - Observe `val` (which is mandatory for this operation)
+* Additionally, all metrics support the `nop` 'no-operation' mode, which does nothing. Useful for resets
 
 As described above, the `val` property is mandatory or optional depending on the selected `op` and the metric type.
 
